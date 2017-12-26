@@ -5,15 +5,12 @@ var _ = require('lodash')
   , ConnectionManager = require('./connection-manager')
   , Query = require('./query')
   , QueryGenerator = require('./query-generator')
-  , DataTypes = require('./data-types');
+  , DataTypes = require('../../data-types').postgres;
 
 var PostgresDialect = function(sequelize) {
   this.sequelize = sequelize;
   this.connectionManager = new ConnectionManager(this, sequelize);
   this.connectionManager.initPools();
-
-  // parseDialectSpecificFields needs access to the pg lib in order to use its array parser. We cannot simply require pg in query.js since the user can specify another library path (such as pg-native etc)
-  Query.prototype.parseDialectSpecificFields.lib = this.connectionManager.lib;
 
   this.QueryGenerator = _.extend({}, QueryGenerator, {
     options: sequelize.options,
@@ -45,6 +42,7 @@ PostgresDialect.prototype.supports = _.merge(_.cloneDeep(Abstract.prototype.supp
   NUMERIC: true,
   ARRAY: true,
   GEOMETRY: true,
+  GEOGRAPHY: true,
   JSON: true,
   JSONB: true,
   deferrableConstraints: true,

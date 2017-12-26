@@ -146,6 +146,9 @@ error.UniqueConstraintError = function (options) {
   this.message = options.message;
   this.errors = options.errors;
   this.fields = options.fields;
+  this.parent = options.parent;
+  this.original = options.parent;
+  this.sql = options.parent.sql;
 };
 util.inherits(error.UniqueConstraintError, error.ValidationError);
 
@@ -287,3 +290,27 @@ error.ConnectionTimedOutError = function (parent) {
   this.name = 'SequelizeConnectionTimedOutError';
 };
 util.inherits(error.ConnectionTimedOutError, error.ConnectionError);
+
+/**
+ * Thrown when a some problem occurred with Instance methods (see message for details)
+ * @extends BaseError
+ * @constructor
+ */
+error.InstanceError = function (message) {
+  error.BaseError.apply(this, arguments);
+  this.name = 'SequelizeInstanceError';
+  this.message = message;
+};
+util.inherits(error.InstanceError, error.BaseError);
+
+/**
+ * Thrown when a record was not found, Usually used with rejectOnEmpty mode (see message for details)
+ * @extends BaseError
+ * @constructor
+ */
+error.EmptyResultError = function (message) {
+  error.BaseError.apply(this, arguments);
+  this.name = 'SequelizeEmptyResultError';
+  this.message = message;
+};
+util.inherits(error.EmptyResultError, error.BaseError);

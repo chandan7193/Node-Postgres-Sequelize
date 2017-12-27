@@ -60,6 +60,14 @@ router.put('/todo/:id', function(req, res) {
   });
 });
 
-
+router.delete('/todo/:id', function(req, res) {
+  models.Todo.destroy({
+    where: {
+      id: req.params.id
+    }
+  }).then(function(todo) {
+    res.json(todo);
+  });
+});
 
 module.exports = router;
